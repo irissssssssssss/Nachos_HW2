@@ -178,6 +178,7 @@ void ForkExecute(Thread *t)
     //<TODO>
     // When Thread t goes to Running state in the first time, its file should be loaded & executed.
     // Hint: This function would not be called until Thread t is on running state.
+    DEBUG(dbgMLFQ, "ForkExecute => fork thread id: " << t->getID() << ", currentTick: " << kernel->stats->totalTicks);
     t->space = new AddrSpace();
     t->space->Load(t->getName());
     t->space->Execute(t->getName());
@@ -190,7 +191,6 @@ int UserProgKernel::InitializeOneThread(char *name, int priority, int burst_time
     // When each execfile comes to Exec function, Kernel helps to create a thread for it.
     // While creating a new thread, thread should be initialized, and then forked.
     t[threadNum] = new Thread(name, threadNum);
-    t[threadNum]->space = new AddrSpace();
     t[threadNum]->setPriority(priority);
     t[threadNum]->setRemainingBurstTime(burst_time);
     t[threadNum]->setRunTime(0);

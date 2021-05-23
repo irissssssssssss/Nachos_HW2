@@ -53,7 +53,6 @@ void Alarm::CallBack()
 
     //<TODO>
 
-    // In each 100 ticks,
 
     // 1. Update Priority
 
@@ -63,8 +62,9 @@ void Alarm::CallBack()
     kernel->scheduler->UpdatePriority();
     kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
     kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
-    if (kernel->currentThread->getPriority() < 50)
+    if (kernel->currentThread->getPriority() < 50 && kernel->currentThread->getRRTime() > 200)
     {
+        kernel->currentThread->setRRTime(0);
         interrupt->YieldOnReturn();
     }
 

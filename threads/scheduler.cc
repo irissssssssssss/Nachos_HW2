@@ -97,14 +97,10 @@ void Scheduler::ReadyToRun(Thread *thread)
         L2ReadyQueue->Insert(thread);
         DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L2");
     }
-    else if (priority >= 100 && priority < 150) //L1:100-149
+    else //L1:100-149
     {
         L1ReadyQueue->Insert(thread);
         DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L1");
-    }
-    else
-    {
-        ASSERT(0);
     }
     //<TODO>
     // readyList->Append(thread);
@@ -274,7 +270,7 @@ static int L1cmp(Thread *x, Thread *y)
 // Function 2. Function definition of sorting rule of L2 ReadyQueue
 static int L2cmp(Thread *x, Thread *y)
 {
-    return y->getPriority() - x->getPriority();
+    return x->getID() - y->getID();
 }
 // Function 3. Scheduler::UpdatePriority()
 // Hint:
@@ -328,12 +324,11 @@ void Scheduler::UpdatePriority()
         thread->setWaitTime(thread->getWaitTime() + TimerTicks);
         if (thread->getWaitTime() > 400)
         {
-            thread->setPriority(thread->getPriority() + 10);
-            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
-            if (thread->getPriority() > 149)
-            {
-                ASSERT(0);
-            }
+            if (thread->getPriority() < 139) {
+                thread->setPriority(thread->getPriority() + 10);
+                DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
+            } else
+                thread->setPriority(149);
         }
     }
 }

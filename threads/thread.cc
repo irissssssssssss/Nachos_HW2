@@ -269,8 +269,8 @@ void Thread::Sleep(bool finishing)
         if (!finishing)
         {
             Statistics *stats = kernel->stats;
-            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << stats->totalTicks << "]: Thread [" << kernel->currentThread->getID() << "] update remaining burst time, from: [" << RemainingBurstTime << "], to [" << (RemainingBurstTime - RunTime) << "]");
-            RemainingBurstTime = (RunTime + RemainingBurstTime) / 2;
+            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << stats->totalTicks << "]: Thread [" << kernel->currentThread->getID() << "] update remaining burst time, from: [" << RemainingBurstTime << "] - ["<< RunTime  <<"] , to [" << (RemainingBurstTime - RunTime) << "]");
+            RemainingBurstTime -= RunTime;
             RunTime = 0;
         }
         kernel->scheduler->Run(nextThread, finishing);
