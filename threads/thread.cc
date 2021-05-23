@@ -263,10 +263,9 @@ void Thread::Sleep(bool finishing)
     // , and determine finishing on Scheduler::Run(nextThread, finishing), not here.
     // 1. Update RemainingBurstTime
     // 2. Reset some value of current_thread, then context switch
-    kernel->scheduler->Run(nextThread, finishing);
     if (nextThread != kernel->currentThread)
     {
-        if (!finishing)
+        if (!finishing && RunTime)
         {
             Statistics *stats = kernel->stats;
             DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << stats->totalTicks << "]: Thread [" << kernel->currentThread->getID() << "] update remaining burst time, from: [" << RemainingBurstTime << "] - ["<< RunTime  <<"] , to [" << (RemainingBurstTime - RunTime) << "]");
