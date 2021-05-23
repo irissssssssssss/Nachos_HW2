@@ -288,12 +288,12 @@ void Scheduler::UpdatePriority()
         thread->setWaitTime(thread->getWaitTime() + TimerTicks);
         if (thread->getWaitTime() > 400)
         {
-            if (thread->getPriority() < 139) {
+            thread->setWaitTime(thread->getWaitTime() - 400);
+            if (thread->getPriority() < 140) {
                 thread->setPriority(thread->getPriority() + 10);
                 DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
             } else {
                 thread->setPriority(149);
-                thread->setWaitTime(thread->getWaitTime() - 400);
             }
         }
     }
