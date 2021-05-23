@@ -35,7 +35,8 @@ CFLAGS = -G 0 -c $(INCDIR)
 
 #<TODO>
 # Add test program to make
-all: halt shell matmult sort test1 test2 fileTest1 fileTest2 
+all: hw2_test1 hw2_test2
+#halt shell matmult sort test1 test2 fileTest1 fileTest2 
 #<TODO>
 
 start.o: start.s ../userprog/syscall.h
