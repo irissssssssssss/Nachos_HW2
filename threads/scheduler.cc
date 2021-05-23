@@ -291,8 +291,10 @@ void Scheduler::UpdatePriority()
             if (thread->getPriority() < 139) {
                 thread->setPriority(thread->getPriority() + 10);
                 DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
-            } else
+            } else {
                 thread->setPriority(149);
+                thread->setWaitTime(thread->getWaitTime() - 400);
+            }
         }
     }
     ListIterator<Thread *> *iterL2 = new ListIterator<Thread *>(L2ReadyQueue);
@@ -303,6 +305,7 @@ void Scheduler::UpdatePriority()
         if (thread->getWaitTime() > 400)
         {
             thread->setPriority(thread->getPriority() + 10);
+            thread->setWaitTime(thread->getWaitTime() - 400);
             DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
             if (thread->getPriority() > 99)
             {
@@ -321,6 +324,7 @@ void Scheduler::UpdatePriority()
         if (thread->getWaitTime() > 400)
         {
             thread->setPriority(thread->getPriority() + 10);
+            thread->setWaitTime(thread->getWaitTime() - 400);
             DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
             if (thread->getPriority() > 49)
             {
