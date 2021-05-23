@@ -281,22 +281,18 @@ static int L2cmp(Thread *x, Thread *y)
 void Scheduler::UpdatePriority()
 {
     Statistics *stats = kernel->stats;
-    ListIterator<Thread *> *iterL3 = new ListIterator<Thread *>(L3ReadyQueue);
-    for (; !iterL3->IsDone(); iterL3->Next())
+    ListIterator<Thread *> *iterL1 = new ListIterator<Thread *>(L1ReadyQueue);
+    for (; !iterL1->IsDone(); iterL1->Next())
     {
-        Thread *thread = iterL3->Item();
+        Thread *thread = iterL1->Item();
         thread->setWaitTime(thread->getWaitTime() + TimerTicks);
         if (thread->getWaitTime() > 400)
         {
-            thread->setPriority(thread->getPriority() + 10);
-            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
-            if (thread->getPriority() > 49)
-            {
-                L3ReadyQueue->Remove(thread);
-                DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is removed from queue L3");
-                L2ReadyQueue->Insert(thread);
-                DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L2");
-            }
+            if (thread->getPriority() < 139) {
+                thread->setPriority(thread->getPriority() + 10);
+                DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
+            } else
+                thread->setPriority(149);
         }
     }
     ListIterator<Thread *> *iterL2 = new ListIterator<Thread *>(L2ReadyQueue);
@@ -317,20 +313,26 @@ void Scheduler::UpdatePriority()
             }
         }
     }
-    ListIterator<Thread *> *iterL1 = new ListIterator<Thread *>(L1ReadyQueue);
-    for (; !iterL1->IsDone(); iterL1->Next())
+    ListIterator<Thread *> *iterL3 = new ListIterator<Thread *>(L3ReadyQueue);
+    for (; !iterL3->IsDone(); iterL3->Next())
     {
-        Thread *thread = iterL1->Item();
+        Thread *thread = iterL3->Item();
         thread->setWaitTime(thread->getWaitTime() + TimerTicks);
         if (thread->getWaitTime() > 400)
         {
-            if (thread->getPriority() < 139) {
-                thread->setPriority(thread->getPriority() + 10);
-                DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
-            } else
-                thread->setPriority(149);
+            thread->setPriority(thread->getPriority() + 10);
+            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from [" << thread->getPriority() - 10 << "] to [" << thread->getPriority() << "]");
+            if (thread->getPriority() > 49)
+            {
+                L3ReadyQueue->Remove(thread);
+                DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is removed from queue L3");
+                L2ReadyQueue->Insert(thread);
+                DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L2");
+            }
         }
     }
+
+
 }
 
 // <TODO>
